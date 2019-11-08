@@ -6,12 +6,15 @@ $(function () {
   "use strict";
   
   var playing = false,
+    bpm = 80,
+    bpms = [bpm / 2, bpm, bpm * 1.5],
     $buttons = $('.js-buttons'),
     $playButton = $('<button />')
       .text('Play'),
     $stopButton = $('<button />')
       .text('Stop'),
-    notes;
+    notes,
+    speed;
   
   $buttons
     .append($playButton)
@@ -38,6 +41,34 @@ $(function () {
   
   togglePlay(false);
   
+  function Speed() {
+    var $el = $('<div />').addClass('speed'),
+      $select = $('<select />'),
+      $option,
+      i,
+      l,
+      current;
+  
+    $el.append($select);
+    
+    for (i = 0, l = bpms.length; i < l; i += 1) {
+      current = bpms[i];
+      
+      $option = $('<option>')
+        .attr('value', current)
+        .attr('selected', current === bpm)
+        .text(current);
+      
+      $select.append($option);
+    }
+    
+    $select.change(function () {
+      bpm = Number($(this).val());
+    });
+    
+    this.$el = $el;
+  }
+  
   function Notes() {
     var $el = $('<ul />').addClass('notes'),
       notes = [],
@@ -56,20 +87,10 @@ $(function () {
       notes[index].removeClass(noteLitClass);
     }
     
-    function onClick(event) {
-      for (i = 0, l = notesArray.length; i < l; i += 1) {
-        dim(i);
-      }
-      
-      highlight($(event.target).data('index'));
-    }
-    
     for (i = 0, l = notesArray.length; i < l; i += 1) {
       $note = $('<li />')
         .addClass('notes__note')
-        .text(notesArray[i])
-        .data('index', i)
-        .click(onClick);
+        .text(notesArray[i]);
       
       $el.append($note);
       
@@ -82,6 +103,8 @@ $(function () {
   }
   
   notes = new Notes();
+  speed = new Speed();
   
   $('.js-notes').append(notes.$el);
+  $('.js-speed').append(speed.$el);
 });
