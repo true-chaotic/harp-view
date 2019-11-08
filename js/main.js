@@ -6,6 +6,7 @@ $(function () {
   "use strict";
   
   var playing = false,
+    minute = 1000 * 60,
     bpm = 80,
     bpms = [bpm / 2, bpm, bpm * 1.5],
     $buttons = $('.js-buttons'),
@@ -14,7 +15,13 @@ $(function () {
     $stopButton = $('<button />')
       .text('Stop'),
     notes,
-    speed;
+    speed,
+    notesString = 'ABCDEFGabcdefg',
+    notesArray = notesString.split(''),
+    tune = 'DEFGabcddcbaGFED',
+    tuneArray = tune.split(),
+    tuneIndex = -1,
+    tuneTimeout;
   
   $buttons
     .append($playButton)
@@ -25,10 +32,53 @@ $(function () {
     $stopButton.toggle(playing);
   }
   
+  function playNote(note) {
+    notes.dimAll();
+    notes.highlight(notesArray.indexOf(note));
+  }
+  
+  function stopTune() {
+    clearTimeout(tuneTimeout);
+    
+    playing = false;
+    
+    updateButtons();
+  }
+  
+  function nextNote() {
+    tuneTimeout = setTimeout(function () {
+      var note;
+      
+      tuneIndex += 1;
+      
+      note = tune.charAt(tuneIndex);
+      
+      if (note) {
+        playNote(note);
+        
+        nextNote();
+      } else {
+        stopTune();
+      }
+    }, Math.round(minute / bpm));
+  }
+  
+  function startTune() {
+    updateButtons();
+    
+    tuneIndex = -1;
+    
+    nextNote();
+  }
+  
   function togglePlay(newPlaying) {
     playing = newPlaying;
     
-    updateButtons();
+    if (playing) {
+      startTune();
+    } else {
+      stopTune();
+    }
   }
   
   $playButton.click(function () {
@@ -72,8 +122,6 @@ $(function () {
   function Notes() {
     var $el = $('<ul />').addClass('notes'),
       notes = [],
-      notesString = 'ABCDEFGabcdefg',
-      notesArray = notesString.split(''),
       i,
       l,
       $note,
@@ -85,6 +133,12 @@ $(function () {
     
     function dim(index) {
       notes[index].removeClass(noteLitClass);
+    }
+    
+    function dimAll() {
+      for (i = 0, l = notesArray.length; i < l; i += 1) {
+        dim(i);
+      }
     }
     
     for (i = 0, l = notesArray.length; i < l; i += 1) {
@@ -100,6 +154,7 @@ $(function () {
     this.$el = $el;
     this.highlight = highlight;
     this.dim = dim;
+    this.dimAll = dimAll;
   }
   
   notes = new Notes();
