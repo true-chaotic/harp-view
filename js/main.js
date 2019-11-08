@@ -32,7 +32,7 @@ $(function () {
           {name: "beer_can_opening"},
           {name: "bell_ring"}
       ],
-      path: "../sounds/",
+      path: "sounds/",
       preload: true,
       volume: 1.0
   });
