@@ -264,3 +264,21 @@ textarea {
   }
 }
 
+.notes {
+  
+}
+
+.notes__note {
+  display: inline-block;
+  border: 1px solid black;
+  font-size: 0.6em;
+  padding: 0.5em 1em;
+  margin: 1em;
+  border-radius: 100%;
+  text-align: center;
+}
+
+.notes__note_lit {
+  background-color: green;
+  color: white;
+}
