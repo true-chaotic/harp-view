@@ -1,5 +1,5 @@
 /*global
-  $, console
+  $, console, ion
 */
 
 $(function () {
@@ -27,14 +27,28 @@ $(function () {
     .append($playButton)
     .append($stopButton);
   
+  ion.sound({
+      sounds: [
+          {name: "beer_can_opening"},
+          {name: "bell_ring"}
+      ],
+      path: "../sounds/",
+      preload: true,
+      volume: 1.0
+  });
+  
   function updateButtons() {
     $playButton.toggle(!playing);
     $stopButton.toggle(playing);
   }
   
   function playNote(note) {
+    var index = notesArray.indexOf(note);
+    
     notes.dimAll();
-    notes.highlight(notesArray.indexOf(note));
+    notes.highlight(index);
+    ion.sound.stop();
+    ion.sound.play(index > 6 ? "bell_ring" : "beer_can_opening");
   }
   
   function stopTune() {
