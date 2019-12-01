@@ -12,10 +12,12 @@ const Player = (function () {
     const ion = window.ion;
 
     ion.sound({
-      sounds: [
-        {name: NOTES.SNAP, volume: 1.0},
-        {name: NOTES.A, volume: 0.3}
-      ],
+      sounds: Object.values(NOTES).map(name => ({
+        name,
+        volume: name === NOTES.SNAP
+          ? 1.0
+          : 0.3
+      })),
       path: "sounds/",
       preload: true,
       multiplay: true
@@ -23,13 +25,11 @@ const Player = (function () {
 
     return {
       playNote: (note) => {
-        console.log(note);
-
-        ion.sound.play(NOTES.A);
+        if (NOTES[note]) {
+          ion.sound.play(NOTES[note]);
+        }
       },
       playSnap: () => {
-        console.log('snap');
-
         ion.sound.play(NOTES.SNAP);
       },
     }
