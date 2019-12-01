@@ -7,10 +7,12 @@ import isPause from './helpers/isPause';
 export default function Controller({tune}) {
   let tick = -1;
   let tuneIndex = -1;
+  let ticksPerMinute = 60 * 4;
 
   const tuneArray = tune.split('');
   const ticksPerSnap = 4;
   const ticksPerNote = 2;
+  const highLightTicks = 1;
 
   const viewer = new Viewer();
   const player = new Player();
@@ -36,13 +38,16 @@ export default function Controller({tune}) {
     tuneIndex = -1;
 
     controllerView.update({playing: false});
-
     ticker.stop();
     viewer.dimAll();
   };
 
   const onTick = () => {
     tick += 1;
+
+    if (tick % ticksPerNote === highLightTicks) {
+      viewer.dimAll();
+    }
 
     if (tick % ticksPerNote === 0) {
       tuneIndex += 1;
@@ -60,7 +65,7 @@ export default function Controller({tune}) {
   };
 
   ticker = new Ticker({
-    ticksPerMinute: 60 * 4,
+    ticksPerMinute,
     onTick
   });
 
