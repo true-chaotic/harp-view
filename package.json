@@ -1,0 +1,31 @@
+{
+  "name": "harp-view",
+  "version": "0.1.0",
+  "description": "Kora harp viewer",
+  "main": "index.html",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "dev": "parcel watch src/harp-view.js",
+    "build": "parcel build src/harp-view.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/true-chaotic/harp-view.git"
+  },
+  "keywords": [
+    "hora",
+    "harp"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/true-chaotic/harp-view/issues"
+  },
+  "homepage": "https://github.com/true-chaotic/harp-view#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  }
+}
