@@ -1,4 +1,4 @@
-import Viewer from "./viewer";
+import Viewer from './viewer';
 import Player from './player';
 import Ticker from './ticker';
 import ControllerView from "./controller-view";

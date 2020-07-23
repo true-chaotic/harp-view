@@ -5,23 +5,22 @@ const NOTES = {
   SNAP: 'snap',
   K: 'bell_ring',
   "F,": 'bell_ring',
+  "C,": 'bell_ring',
+  "D,": 'bell_ring',
+  "E,": 'bell_ring',
+  A: 'bell_ring',
+  B: 'bell_ring',
   C: 'bell_ring',
   D: 'bell_ring',
   E: 'bell_ring',
   F: 'bell_ring',
   G: 'bell_ring',
-  A: 'bell_ring',
-  B: 'bell_ring',
   c: 'bell_ring',
   d: 'bell_ring',
   e: 'bell_ring',
   f: 'bell_ring',
   g: 'bell_ring',
   b: 'bell_ring',
-
-  /*Из ABC взято обозначение нот третьей октавы. Используется апостроф. JS на него ругается.
-  Нужно как то иначе определять имена нот не отклоняясь от стандарта ABC  */
-
   "c'": 'bell_ring',
   "d'": 'bell_ring',
   "e'": 'bell_ring',

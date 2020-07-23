@@ -69,6 +69,11 @@ export default function ControllerView({
   $el.appendChild(controlSpeed);
 
   const viewerContainer = createElement('div', `${block}__viewer`);
+  Object.assign(viewerContainer.style, {
+    maxWidth: '320px',
+    margin: '0 auto'
+  });
+
   viewerContainer.appendChild(viewerElement);
   $el.appendChild(viewerContainer);
 
