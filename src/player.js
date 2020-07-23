@@ -1,7 +1,6 @@
 import './vendor/ion.sound';
 
 const NOTES = {
-  /* F, C D E F G A B c d e f g a b c' d' e' f' g' a' - abc notation kora scale */
   SNAP: 'snap',
   K: 'bell_ring',
   "F,": 'bell_ring',

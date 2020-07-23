@@ -1325,7 +1325,6 @@ exports.default = void 0;
 require("./vendor/ion.sound");
 
 var NOTES = {
-  /* F, C D E F G A B c d e f g a b c' d' e' f' g' a' - abc notation kora scale */
   SNAP: 'snap',
   K: 'bell_ring',
   "F,": 'bell_ring',
@@ -1608,14 +1607,19 @@ function Controller(_ref) {
   var tune = _ref.tune;
   var tick = -1;
   var tuneIndex = -1;
-  var ticksPerMinute = 60 * 4;
+  var ticksPerMinute = 120 * 4;
   var ticksPerMinuteSteps = [0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.5, 3, 3.5, 4].map(function (multiplier) {
     return Math.round(ticksPerMinute * multiplier);
   });
   var currentTicksStep = ticksPerMinuteSteps.findIndex(function (tpm) {
     return tpm === ticksPerMinute;
   });
-  var tuneArray = tune.split('');
+  var modifiers = ['\'', ','];
+  var tuneArray = tune.split('').reduce(function (result, symbol) {
+    var note = modifiers.includes(symbol) ? result.pop() + symbol : symbol;
+    result.push(note);
+    return result;
+  }, []);
   var ticksPerSnap = 4;
   var ticksPerNote = 2;
   var highLightTicks = 1;

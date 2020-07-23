@@ -7,14 +7,26 @@ import isPause from './helpers/isPause';
 export default function Controller({tune}) {
   let tick = -1;
   let tuneIndex = -1;
-  let ticksPerMinute = 60 * 4;
+  let ticksPerMinute = 120 * 4;
 
   const ticksPerMinuteSteps = [0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.5, 3, 3.5, 4]
     .map(multiplier => Math.round(ticksPerMinute * multiplier));
 
   let currentTicksStep = ticksPerMinuteSteps.findIndex(tpm => tpm === ticksPerMinute);
 
-  const tuneArray = tune.split('');
+  const modifiers = ['\'', ','];
+
+  const tuneArray = tune
+    .split('')
+    .reduce((result, symbol) => {
+      let note = modifiers.includes(symbol)
+        ? result.pop() + symbol
+        : symbol;
+
+      result.push(note);
+
+      return result;
+    }, []);
   const ticksPerSnap = 4;
   const ticksPerNote = 2;
   const highLightTicks = 1;
