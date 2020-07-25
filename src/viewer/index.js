@@ -30,7 +30,7 @@ const activeClass = `${baseNoteClass}_active`;
 export default function Viewer() {
   // const notes = "F, C, D, E, F G A B c d e f | g a b c' d' e' f' g' a' x";
 
-  const notes = "| e c a f D B G E, D, C, F, | a' g' f' d b g E C A F x |";
+  const notes = "| e c A F D B, G, E, D, C, F,, | x a g f d B G E C A, F, |";
 
   const $el = createElement('div', 'notes-viewer');
 
