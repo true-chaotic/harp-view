@@ -19,8 +19,8 @@ const NOTES = {
   F: 'F2',
   G: 'G2',
   A: 'A2',
-  B: 'B2',  
-  
+  B: 'B2',
+
   c: 'C3',
   d: 'D3',
   e: 'E3',
@@ -32,7 +32,7 @@ const NOTES = {
 const Player = (function () {
   let instance;
 
-  function GlobalPlayer() {
+  function GlobalPlayer({soundFolder = 'sounds/'} = {}) {
     const ion = window.ion;
 
     ion.sound({
@@ -42,7 +42,7 @@ const Player = (function () {
           ? 1.0
           : 0.3
       })),
-      path: "sounds/",
+      path: soundFolder,
       preload: true,
       multiplay: true
     });
@@ -59,9 +59,9 @@ const Player = (function () {
     }
   }
 
-  return function() {
+  return function({soundFolder} = {}) {
     if (!instance) {
-      instance = new GlobalPlayer();
+      instance = new GlobalPlayer({soundFolder});
     }
 
     return instance;

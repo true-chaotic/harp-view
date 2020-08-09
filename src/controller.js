@@ -4,7 +4,7 @@ import Ticker from './ticker';
 import ControllerView from "./controller-view";
 import isPause from './helpers/isPause';
 
-export default function Controller({tune}) {
+export default function Controller({tune, soundFolder}) {
   let tick = -1;
   let tuneIndex = -1;
   let ticksPerMinute = 120 * 4;
@@ -32,7 +32,7 @@ export default function Controller({tune}) {
   const highLightTicks = 1;
 
   const viewer = new Viewer();
-  const player = new Player();
+  const player = new Player({soundFolder});
 
   const playAndShow = () => {
     const note = tuneArray[tuneIndex];

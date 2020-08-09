@@ -3,7 +3,7 @@ import __ from './helpers/translate';
 import tuneValid from './helpers/tuneValid';
 import Controller from "./controller";
 
-window.HarpView = function(selector) {
+window.HarpView = function(selector, soundFolder) {
   document.querySelectorAll('.' + selector).forEach(node => {
     const tune = node.innerHTML.trim();
 
@@ -13,6 +13,6 @@ window.HarpView = function(selector) {
       return;
     }
 
-    insertAfter(new Controller({tune}), node);
+    insertAfter(new Controller({tune, soundFolder}), node);
   });
 };
