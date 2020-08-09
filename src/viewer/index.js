@@ -3,6 +3,8 @@ import createElement from "../helpers/createElement";
 import fs from 'fs';
 const styles = fs.readFileSync(__dirname + '/notes-viewer.css', 'utf8');
 
+const noop = () => {};
+
 let styleAdded = false;
 
 const addStyles = () => {
@@ -27,7 +29,7 @@ const baseContainerClass = 'notes-viewer__container';
 const baseNoteClass = 'notes-viewer__note';
 const activeClass = `${baseNoteClass}_active`;
 
-export default function Viewer() {
+export default function Viewer({onClickNote = noop} = {}) {
   // const notes = "F, C, D, E, F G A B c d e f | g a b c' d' e' f' g' a' x";
 
   const notes = "| e c A F D B, G, E, D, C, F,, | x a g f d B G E C A, F, |";
@@ -55,7 +57,11 @@ export default function Viewer() {
           `${baseContainerClass}_${getNoteModifier(note)}`
         ]);
 
-        const noteElement = createElement('span', baseNoteClass);
+        const noteElement = createElement('button', baseNoteClass, {
+          click() {
+            onClickNote(note);
+          }
+        });
         noteElement.innerText = note;
 
         noteContainer.appendChild(noteElement);
@@ -73,6 +79,7 @@ export default function Viewer() {
   function dim(note) {
     if (elements[note]) {
       elements[note].classList.remove(activeClass);
+      elements[note].blur();
 
       highLighted.delete(note);
     }

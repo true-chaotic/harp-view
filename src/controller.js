@@ -31,7 +31,16 @@ export default function Controller({tune, soundFolder}) {
   const ticksPerNote = 2;
   const highLightTicks = 1;
 
-  const viewer = new Viewer();
+  const viewer = new Viewer({
+    onClickNote(note) {
+      player.playNote(note);
+      viewer.highLight(note);
+
+      setTimeout(() => {
+        viewer.dim(note);
+      }, 500);
+    }
+  });
   const player = new Player({soundFolder});
 
   const playAndShow = () => {
@@ -77,7 +86,7 @@ export default function Controller({tune, soundFolder}) {
     }
 
     if (tick % ticksPerSnap === 0) {
-      player.playSnap();
+      //player.playSnap();
     }
   };
 
