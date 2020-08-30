@@ -1,36 +1,37 @@
 import Viewer from './viewer';
 import Player from './player';
-import Ticker from './ticker';
 import ControllerView from "./controller-view";
-import isPause from './helpers/isPause';
+import abcjs from "abcjs";
+
+const parseNote = glyph => {
+  if (glyph.indexOf('[') === -1) {
+    return [glyph];
+  }
+
+  const result = [];
+  const glyphs = glyph.substring(1, glyph.length - 1).split('');
+
+  let currentGlyph = glyphs.shift();
+  glyphs.forEach((letter, index, array) => {
+    if (/[a-zA-Z]/.test(letter)) {
+      result.push(currentGlyph);
+      currentGlyph = letter;
+    } else {
+      currentGlyph += letter;
+    }
+
+    if (index === array.length - 1) {
+      result.push(currentGlyph);
+    }
+  });
+
+  console.log(result);
+
+  return result;
+};
 
 export default function Controller({tune, soundFolder}) {
-  let tick = -1;
-  let tuneIndex = -1;
-  let ticksPerMinute = 120 * 4;
-
-  const ticksPerMinuteSteps = [0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.5, 3, 3.5, 4]
-    .map(multiplier => Math.round(ticksPerMinute * multiplier));
-
-  let currentTicksStep = ticksPerMinuteSteps.findIndex(tpm => tpm === ticksPerMinute);
-
-  const modifiers = ['\'', ','];
-
-  const tuneArray = tune
-    .split('')
-    .reduce((result, symbol) => {
-      let note = modifiers.includes(symbol)
-        ? result.pop() + symbol
-        : symbol;
-
-      result.push(note);
-
-      return result;
-    }, []);
-  const ticksPerSnap = 4;
-  const ticksPerNote = 2;
-  const highLightTicks = 1;
-
+  let player = new Player({soundFolder});
   const viewer = new Viewer({
     onClickNote(note) {
       player.playNote(note);
@@ -41,86 +42,61 @@ export default function Controller({tune, soundFolder}) {
       }, 500);
     }
   });
-  const player = new Player({soundFolder});
-
-  const playAndShow = () => {
-    const note = tuneArray[tuneIndex];
-
-    viewer.dimAll();
-
-    if (isPause(note)) {
-      return;
-    }
-
-    player.playNote(note);
-    viewer.highLight(note);
-  };
-
-  let ticker;
-  let controllerView;
 
   const stop = () => {
-    tick = -1;
-    tuneIndex = -1;
-
     controllerView.update({playing: false});
-    ticker.stop();
+    timingCallbacks.stop();
     viewer.dimAll();
   };
 
-  const onTick = () => {
-    tick += 1;
-
-    if (tick % ticksPerNote === highLightTicks) {
-      viewer.dimAll();
-    }
-
-    if (tick % ticksPerNote === 0) {
-      tuneIndex += 1;
-
-      if (tuneIndex === tuneArray.length) {
-        return stop();
+  const visualObj = abcjs.renderAbc("*", tune);
+  const timingCallbacks = new abcjs.TimingCallbacks(visualObj[0], {
+    eventCallback(event) {
+      if (!event) {
+        return;
       }
 
-      playAndShow();
-    }
+      const {startChar, endChar} = event;
 
-    if (tick % ticksPerSnap === 0) {
-      //player.playSnap();
-    }
-  };
+      if (![startChar, endChar].every(index => typeof index === 'number')) {
+        return;
+      }
 
-  ticker = new Ticker({
-    ticksPerMinute,
-    onTick
+      const glyph = tune.substring(startChar, endChar)
+        .trim()
+        .replace(/[0-9]/g, '')
+        .replace(/[\/]/g, '');
+
+      console.log(glyph);
+
+      const notes = parseNote(glyph);
+
+      viewer.dimAll();
+
+      notes.forEach(note => {
+        player.playNote(note);
+        viewer.highLight(note);
+      })
+    }
   });
 
-  const speedStep = (increment) => {
-    currentTicksStep = Math.max(0, Math.min((currentTicksStep + increment), ticksPerMinuteSteps.length - 1));
-
-    ticksPerMinute = ticksPerMinuteSteps[currentTicksStep];
-
-    ticker.update({ticksPerMinute});
-    controllerView.update({bpm: ticksPerMinute / ticksPerSnap});
-  };
-
-  controllerView = new ControllerView({
+  const controllerView = new ControllerView({
     viewerElement: viewer.$el,
 
-    bpm: ticksPerMinute / ticksPerSnap,
+    //bpm: ticksPerMinute / ticksPerSnap,
 
     onClickFaster() {
-      speedStep(+1);
+      //speedStep(+1);
     },
 
     onClickSlower() {
-      speedStep(-1);
+      //speedStep(-1);
     },
 
     onPlay() {
       controllerView.update({playing: true});
 
-      ticker.start();
+      timingCallbacks.start();
     },
     onStop: stop
   });
