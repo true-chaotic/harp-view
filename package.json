@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "parcel watch src/harp-view.js",
     "build": "parcel build src/harp-view.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"npm run dev\" \"http-server\""
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,8 @@
   },
   "homepage": "https://github.com/true-chaotic/harp-view#readme",
   "devDependencies": {
+    "concurrently": "^5.3.0",
+    "http-server": "^0.12.3",
     "parcel-bundler": "^1.12.4"
   }
 }
